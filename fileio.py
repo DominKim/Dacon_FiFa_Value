@@ -3,10 +3,12 @@
 """
 import pandas as pd
 from sklearn.metrics import mean_squared_error, r2_score
-from sklearn.model_selection import train_test_split
+from sklearn.model_selection import train_test_split, GridSearchCV
 from sklearn.linear_model import LinearRegression, Ridge
+from sklearn.ensemble import RandomForestRegressor
 from sklearn.svm import  LinearSVR
 from sklearn.preprocessing import MinMaxScaler
+from sklearn.pipeline import Pipeline
 import matplotlib.pyplot as plt
 import numpy as np
 
@@ -38,51 +40,55 @@ x_idx = [i for i in idx[1:11] if train[i].dtype == "int64" or train[i].dtype == 
 X = train[x_idx]
 y = train["value"]
 
-# 정규화
-scaler = MinMaxScaler()
-X_train_scaled = scaler.fit_transform(X)
-X_train_scaled
 # train, test split
-train_x, test_x, train_y, test_y = train_test_split(X_train_scaled, y, test_size = 0.3)
+train_x, test_x, train_y, test_y = train_test_split(X, y, test_size = 0.3)
+
+# 기본 pipeline 생성
+pipe = Pipeline([("preprocessing", MinMaxScaler()), 
+                 ("regressor", RandomForestRegressor())])
+
+# param_grid
+
+param_grid = [
+    {"regressor":[LinearRegression()], "preprocessing":[MinMaxScaler()]},
+    {"regressor":[RandomForestRegressor()], "preprocessing":[None],
+     "regressor_n_estimators":[100,200],
+     "regressor_max_depth":[3, 6, 8, 10],
+     "regressor_min_samples_split":[2, 3, 4, 5],
+     "regressor_min_samples_leaf":[1,3,5,7], "regressor_max_features":[5]}]
 
 
-# 선형회귀 model 생성
-obj = LinearRegression()
-model = obj.fit(X = train_x, y = train_y)
+# Grid Search
+gs = GridSearchCV(pipe, param_grid, cv = 5, n_jobs=-1)
+model = gs.fit(train_x, train_y)
+model.best_score_ # 0.9833333333333332
+model.best_params_
+'''
+{'max_depth': 6,
+ 'min_samples_leaf': 1,
+ 'min_samples_split': 3,
+ 'n_estimators': 400}
+'''
+pipe2 = Pipeline([("preprocessing", MinMaxScaler()), 
+                 ("regressor", RandomForestRegressor(n_estimators = 100,min_samples_leaf = 1, min_samples_split = 3, max_depth = 6))])
+model = pipe2.fit(train_x, train_y)
 y_pred = model.predict(test_x)
+score = r2_score(test_y, y_pred)
+score
 
 # mse, score
-model.score(train_x, train_y) # 0.6483753991528678
-model.score(test_x, test_y)   # 0.6483753991528678
-model.coef_
-mse = mean_squared_error(test_y, y_pred)
-mse 
-score = r2_score(test_y, y_pred)
-score # 0.6250441446025428
-y_true = np.array(test_y)
 
 df = pd.DataFrame({"y_true":test_y, "y_pred":y_pred})
 df.corr() # 0.79
 
+plt.style.use("ggplot")
+plt.plot(np.array(test_y)[:100], c= "r", ls = "-", marker = "", label = "real_value")
+plt.plot(y_pred[:100], c= "b", ls = "-", marker = "", label = "predicted value")
+plt.legend(loc = "best")
 
-# 선형 svm 생성
-lsvm = LinearSVR()
-model_svm = lsvm.fit(train_x, train_y)
-y_pred_svm = model_svm.predict(test_x)
 
-# mse, score
-model_svm.score(train_x, train_y) # 0.6483753991528678
-model_svm.score(test_x, test_y)   # 0.6483753991528678
 
-mse = mean_squared_error(test_y, y_pred)
-mse 
-score = r2_score(test_y, y_pred)
-score # 0.6250441446025428
-y_true = np.array(test_y)
-y_true
 
-df = pd.DataFrame({"y_true":test_y, "y_pred":y_pred_svm})
-df.corr()
 
 
 test = pd.read_csv("c:/itwill/4_python-ii/data/fifa_test.csv")
@@ -105,6 +111,9 @@ test.isnull().sum() # 결측치 확인
 X = test[x_idx]
 y_pred = model.predict(X)
 y_pred
+
+
+
 
 submit = pd.read_csv("c:/itwill/4_python-ii/data/submission.csv")
 submit.info()
