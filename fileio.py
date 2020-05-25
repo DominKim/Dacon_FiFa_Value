@@ -44,18 +44,17 @@ y = train["value"]
 train_x, test_x, train_y, test_y = train_test_split(X, y, test_size = 0.3)
 
 # 기본 pipeline 생성
-pipe = Pipeline([("preprocessing", MinMaxScaler()), 
+pipe = Pipeline([("scaler", MinMaxScaler()), 
                  ("regressor", RandomForestRegressor())])
 
 # param_grid
-
 param_grid = [
-    {"regressor":[LinearRegression()], "preprocessing":[MinMaxScaler()]},
-    {"regressor":[RandomForestRegressor()], "preprocessing":[None],
-     "regressor_n_estimators":[100,200],
-     "regressor_max_depth":[3, 6, 8, 10],
-     "regressor_min_samples_split":[2, 3, 4, 5],
-     "regressor_min_samples_leaf":[1,3,5,7], "regressor_max_features":[5]}]
+    {"regressor":[LinearRegression()], "scaler":[MinMaxScaler()]},
+    {"regressor":[RandomForestRegressor(max_features = 5)], "scaler":[None],
+     "regressor__n_estimators":[100,200],
+     "regressor__max_depth":[3, 6, 8, 10],
+     "regressor__min_samples_split":[2, 3, 4, 5],
+     "regressor__min_samples_leaf":[1,3,5,7], "regressor__max_features":[5]}]
 
 
 # Grid Search
@@ -63,18 +62,14 @@ gs = GridSearchCV(pipe, param_grid, cv = 5, n_jobs=-1)
 model = gs.fit(train_x, train_y)
 model.best_score_ # 0.9833333333333332
 model.best_params_
+model.predict(test_x)
+model.feature_importance_
 '''
 {'max_depth': 6,
  'min_samples_leaf': 1,
  'min_samples_split': 3,
  'n_estimators': 400}
 '''
-pipe2 = Pipeline([("preprocessing", MinMaxScaler()), 
-                 ("regressor", RandomForestRegressor(n_estimators = 100,min_samples_leaf = 1, min_samples_split = 3, max_depth = 6))])
-model = pipe2.fit(train_x, train_y)
-y_pred = model.predict(test_x)
-score = r2_score(test_y, y_pred)
-score
 
 # mse, score
 
@@ -111,9 +106,6 @@ test.isnull().sum() # 결측치 확인
 X = test[x_idx]
 y_pred = model.predict(X)
 y_pred
-
-
-
 
 submit = pd.read_csv("c:/itwill/4_python-ii/data/submission.csv")
 submit.info()
