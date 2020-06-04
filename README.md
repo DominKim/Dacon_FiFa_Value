@@ -11,4 +11,9 @@ pd.cut(df, [0, 1, np.inf], labels = ["a","b"])
 
 # df.rename(columns = {"기존 열 이름" : "새로운 열 이름"})
 # df의 열이름을 변경할때 dict형을 이용하면 쉽게 바꿀수 있이다.
+
+# df.largest(n, columns, keep = "first")
+# 지정한 열의 n개 만큼 내림 차순으로 값을 반환 한다.
+# keep = "first" : 중복 값중 첫번째, "last" : 마지막 값, "all" : 모든 값 반환
+# df.sort_values(columns, ascending = False).head(n)가 같지만 좀 더 능률이 좋다.
 ~~~
