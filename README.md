@@ -21,4 +21,9 @@ pd.cut(df, [0, 1, np.inf], labels = ["a","b"])
 # df.reset_index
 # df의 기존 index를 열에 추가 시키고, 새로운 순차 수열 index 생성
 # df.reset_index(drop = True) : 기존 index 제거, 새로운 순차 수열 index 생성
+
+# pd.merge()
+# 두 객체에 중복된 컬럼 이름이 하나도 없다면 따로 지정해준다. 아래는 지정 방법이다.
+# pd.merge(left_on)  : 조인키로 사용할 left DataFrame의 컬럼
+# pd.merge(right_on) : 조인키로 사용할 right DataFrame의 컬럼
 ~~~
