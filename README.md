@@ -1,4 +1,5 @@
 ## Dacon FIFA Player Values prediction
+- 부족한 점 review
 ~~~python3
 # np.inf = 무한대를 표시
 pd.cut(df, [0, 1, np.inf], labels = ["a","b"])
@@ -16,4 +17,8 @@ pd.cut(df, [0, 1, np.inf], labels = ["a","b"])
 # 지정한 열의 n개 만큼 내림 차순으로 값을 반환 한다.
 # keep = "first" : 중복 값중 첫번째, "last" : 마지막 값, "all" : 모든 값 반환
 # df.sort_values(columns, ascending = False).head(n)가 같지만 좀 더 능률이 좋다.
+
+# df.reset_index
+# df의 기존 index를 열에 추가 시키고, 새로운 순차 수열 index 생성
+# df.reset_index(drop = True) : 기존 index 제거, 새로운 순차 수열 index 생성
 ~~~
