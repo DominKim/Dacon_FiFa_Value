@@ -1,7 +1,10 @@
 ## Dacon FIFA Player Values prediction
-- Dacon 해외 축구 선수 이적료 예측 미션
-> 데이터 셋 기본 정보
- 
+> Dacon 해외 축구 선수 이적료 예측 미션
+> - 데이터 셋 기본 정보
+> ~~~ python3
+> asdf
+> ~~~
+
 - 부족한 점 review
 ~~~python3
 # np.inf = 무한대를 표시
