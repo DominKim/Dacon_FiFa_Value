@@ -11,6 +11,9 @@
 > ~~~
 > - EDA(Exploratory Data Analysis, 탐색적 데이터 분석)
 > ~~~ python3
+> import seaborn as sns
+> import matplotlib.pyplot as plt
+> 
 > - contract_until
 > # 계약기간 변수는 숫자와 문자로 결합 되어 있는 변수이다. 이를 처리 하기위해 문자를 숫자 포함하고 있는 변수들로 아래와 같이 처리 하였다.
 > comdata["contract_until"] = comdata["contract_until"].str.slice(-4,)
@@ -23,7 +26,8 @@
 > - continent
 > # 대륙 변수의 범주별 빈도를 확인 하면 오세아니아가 상대적으로 빈도가 작은 걸 확인 할 수 있지만
 > # 다른 빈도와 합치는 것은 모델링을 통해 RMSE점수를 확인 하고 시도해 볼 필요가 있다.
->
+> fig,ax = plt.subplots(ncols = 2, figsize = (13,5))
+> g = sns.barplot(x = "continent", y = "value", data = comdata, ax = ax[0])
 > - position
 > # 포지션 변수는 당연하게도 골키퍼 포지션의 빈도수가 가장 작다.
 > # 선수들은 포지션별로 가지는 특성이 다르기 때문에 본래대로 분류해서 사용할 필요가 있다.
@@ -52,6 +56,8 @@
 > # 오버롤, 포텐션 변수를 displot으로 분포를 확인해 보면 평균보다 중앙값, 최빈수가 큰 정적편포를 보인다.
 > # 또한, boxplot을 사용해 이상치를 확인해 보면 이상치가 존재 하는걸 불 수 있다. 이는 이상치를 해결 하기 위해
 > # 전처리 과정이 필요하다는 것을 나타낸다.
+>
+>
 > ~~~
 
 
