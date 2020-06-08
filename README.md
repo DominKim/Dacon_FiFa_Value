@@ -28,6 +28,7 @@
 > # 다른 빈도와 합치는 것은 모델링을 통해 RMSE점수를 확인 하고 시도해 볼 필요가 있다.
 > fig,ax = plt.subplots(ncols = 2, figsize = (13,5))
 > g = sns.barplot(x = "continent", y = "value", data = comdata, ax = ax[0])
+> plt.show()
 > - position
 > # 포지션 변수는 당연하게도 골키퍼 포지션의 빈도수가 가장 작다.
 > # 선수들은 포지션별로 가지는 특성이 다르기 때문에 본래대로 분류해서 사용할 필요가 있다.
